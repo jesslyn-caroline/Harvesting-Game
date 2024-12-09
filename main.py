@@ -135,6 +135,7 @@ def end_day():
 
 def market_menu():
     while True:
+        cls()
         print('-' * 80)
         print(f'{'🏪 Market 🏪':^80}')
         print('-' * 80)
@@ -158,84 +159,101 @@ def market_menu():
 
         if choice == '1':
             cls()
-            market.buy.check_items()
 
-            valid = False
-            while not valid:
-                try:
-                    choice = input('> ❓ Do you want to buy item? (y/n): ').lower()
-
-                    if choice == '': raise ValueError('> ❗ Choice may not be empty!\n')
-                    if choice not in ['y', 'n']: raise ValueError('> ❗ Invalid option!\n')
-                    valid = True
-
-                except ValueError as e:
-                    print(str(e))
-
-            print()
-            
-            valid = False
-            while not valid:
-                try:
-                    choice = input('> Enter item number: ')
-                    if choice == '': raise ValueError('> ❗ Choice may not be empty!\n')
-                    if not choice.isnumeric(): raise ValueError('> ❗ Choice must be a number!\n')
-                    if int(choice) < 1 or int(choice) > len(market.buy.items): raise ValueError('> ❗ Out of choices, please enter the correct number!\n')
-                    valid = True
-
-                except ValueError as e:
-                    print(str(e))
-
-            print()
-
-            valid = False
-            while not valid:
-                try:
-                    amount = input('> Enter the amount you want to buy: ')
-                    if amount == '': raise ValueError('> ❗ Choice may not be empty!\n')
-                    if not amount.isnumeric(): raise ValueError('> ❗ Invalid amount!\n')
-                        
-                    amount = int(amount)
-                    if amount < 1: raise ValueError('> ❗ You must buy at least 1 seed!\n')
-                    valid = True
-
-                except ValueError as e:
-                    print(str(e))
-
-            print()
-
-            
-            item_to_buy = market.buy.get_item(int(choice))
-
-            possible_to_buy = False if user.money - (item_to_buy['price'] * amount) < 0 else True
-
-            if not possible_to_buy:
-                print("Sorry, you don't have enough money to buy.")
-            else:
-                user.expense(item_to_buy['price'] * amount)
-                user.update_seed(f'{item_to_buy['icon']} {item_to_buy['name']}', amount)
-                print(f'{item_to_buy['icon']} {item_to_buy['name']} seed(s) has been purchased. Total purchase: {item_to_buy['price'] * amount}')
-            
-            input('\n> Press any key to continue...')
-            cls()
+            still_buying = True
+            while still_buying:
+                market.buy.check_items()
+                
+                valid = False
+                while not valid:
+                    try:
+                        choice = input('> ❓ Do you want to buy item? (y/n): ').lower()
+    
+                        if choice == '': raise ValueError('> ❗ Choice may not be empty!\n')
+                        if choice not in ['y', 'n']: raise ValueError('> ❗ Invalid option!\n')
+                            
+                        valid = True
+    
+                    except ValueError as e:
+                        print(str(e))
+    
+                print()
+                
+                if choice == 'n': 
+                    still_buying = False
+                    break
+                    
+                valid = False
+                while not valid:
+                    try:
+                        choice = input('> Enter item number: ')
+                        if choice == '': raise ValueError('> ❗ Choice may not be empty!\n')
+                        if not choice.isnumeric(): raise ValueError('> ❗ Choice must be a number!\n')
+                        if int(choice) < 1 or int(choice) > len(market.buy.items): raise ValueError('> ❗ Out of choices, please enter the correct number!\n')
+                        valid = True
+    
+                    except ValueError as e:
+                        print(str(e))
+    
+                print()
+    
+                valid = False
+                while not valid:
+                    try:
+                        amount = input('> Enter the amount you want to buy: ')
+                        if amount == '': raise ValueError('> ❗ Choice may not be empty!\n')
+                        if not amount.isnumeric(): raise ValueError('> ❗ Invalid amount!\n')
+                            
+                        amount = int(amount)
+                        if amount < 1: raise ValueError('> ❗ You must buy at least 1 seed!\n')
+                        valid = True
+    
+                    except ValueError as e:
+                        print(str(e))
+    
+                print()
+    
+                
+                item_to_buy = market.buy.get_item(int(choice))
+    
+                possible_to_buy = False if user.money - (item_to_buy['price'] * amount) < 0 else True
+    
+                if not possible_to_buy:
+                    print("Sorry, you don't have enough money to buy.")
+                else:
+                    user.expense(item_to_buy['price'] * amount)
+                    user.update_seed(f'{item_to_buy['icon']} {item_to_buy['name']}', amount)
+                    print(f'{item_to_buy['icon']} {item_to_buy['name']} seed(s) has been purchased. Total purchase: {item_to_buy['price'] * amount}')
+                
+                input('\n> Press any key to continue...')
+                cls()
 
         elif choice == '2':
             cls()
-            market.sell.check_price()
 
-            valid = False
-            while not valid:
-                try:
-                    choice = input('> ❓ Do you want to sell item? (y/n): ').lower()
-
-                    if choice == '': raise ValueError('> ❗ Choice may not be empty!\n')
-                    if choice not in ['y', 'n']: raise ValueError('> ❗ Invalid option!\n')
-                    valid = True
-
-                except ValueError as e:
-                    print(str(e))
-
-            if choice == 'y':
+            still_selling = True
+            while still_selling:
+                
+                market.sell.check_price()
+    
+                valid = False
+                while not valid:
+                    try:
+                        choice = input('> ❓ Do you want to sell item? (y/n): ').lower()
+    
+                        if choice == '': raise ValueError('> ❗ Choice may not be empty!\n')
+                        if choice not in ['y', 'n']: raise ValueError('> ❗ Invalid option!\n')
+                        valid = True
+    
+                    except ValueError as e:
+                        print(str(e))
+    
+                print()
+    
+                if choice == 'n': 
+                    still_buying = False
+                    break
+                
                 possible_to_sell = inventory.print_inventory()
                 if not possible_to_sell:
                     print("Sorry, you don't have crops or resources to sell")
@@ -246,9 +264,9 @@ def market_menu():
                         ## Need to be fixed
                     else:
                         print("You don't have that item to sell")
-
-            input('\n> Press any key to continue...')
-            cls()
+    
+                input('\n> Press any key to continue...')
+                cls()
 
         elif choice == '3':
             print('\nThank you for visiting our market!')
@@ -300,7 +318,7 @@ while True:
 
     choice = input('> Enter menu number: ')
 
-    if choice in ['1', '2', '5']: cls()
+    if choice in ['1', '2', '3', '4', '5', '6', '7']: cls()
 
     if choice == '1':
         farm_menu()
