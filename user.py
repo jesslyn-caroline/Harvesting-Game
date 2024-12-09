@@ -3,15 +3,15 @@ class User:
         self.money = 500
         self.tools = ['Hoe', 'Watering Can']
         self.seeds = dict()
-        self.statistic = {'1': [500]}
+        self.statistic = {1: {"Profit": 0, "Expense" : 0}}
 
     def profit(self, amount):
         self.money += amount
-        self.statistic[len(self.statistic)].append(amount)
+        self.statistic[len(self.statistic)]["Profit"] += amount
     
     def expense(self, amount):
         self.money -= amount
-        self.statistic[len(self.statistic)].append(-amount)
+        self.statistic[len(self.statistic)]["Expense"] += amount
     
     def add_tool(self, tool):
         self.tools.append(tool)
@@ -40,19 +40,10 @@ class User:
             for i in self.seeds.keys():
                 print(f'{i}: {self.seeds[i]}')
         print()
-        print(f'> 🧾 Profit and Expense: ')
+        print(f'> 🧾 Profit and Expense History: ')
         for i in self.statistic.keys():
             print(f'Day {i}: ')
-            if len(self.statistic[i]) == 0:
-                if i == len(self.statistic): print("You haven't gained profit or bought anything today.")
-                else: print("You didn't have any profit or expense.")
-            else:
-                profit = 0
-                expense = 0
-                for j in self.statistic[i]:
-                    if j > 0: profit += j
-                    else: expense += j
-                print(f'Profit: {profit}')
-                print(f'Expense: {-expense}')
+            print(f'Profit: {self.statistic[i]["Profit"]}')
+            print(f'Expense: {self.statistic[i]["Expense"]}')
         print()
         print('-' * 80)
