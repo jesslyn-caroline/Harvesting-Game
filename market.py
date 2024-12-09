@@ -45,16 +45,22 @@ class Buy:
     
     def update_item(self, items):
         for i in items:
-            print(i)
             self.items.append(i)
     
     def check_items(self):
         print('-' * 80)
         print(f'{'Market Items':^80}')
         print('-' * 80)
-        for i in self.items:
-            print(f'{i["icon"]} {i["name"]} - Price: {i["price"]}')
+        for i in range (len(self.items)):
+            print(f'{i+1}. {self.items[i]["icon"]} {self.items[i]["name"]} - Price: {self.items[i]["price"]}')
         print('-' * 80)
+
+    def get_item(self, index):
+        index = index - 1
+        for i in range(len(self.items)):
+            if i == index:
+                return self.items[i]
+                
  
 class Sell: 
     def __init__(self):
