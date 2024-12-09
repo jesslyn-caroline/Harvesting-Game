@@ -159,6 +159,63 @@ def market_menu():
         if choice == '1':
             cls()
             market.buy.check_items()
+
+            valid = False
+            while not valid:
+                try:
+                    choice = input('> ❓ Do you want to buy item? (y/n): ').lower()
+
+                    if choice == '': raise ValueError('> ❗ Choice may not be empty!\n')
+                    if choice not in ['y', 'n']: raise ValueError('> ❗ Invalid option!\n')
+                    valid = True
+
+                except ValueError as e:
+                    print(str(e))
+
+            print()
+            
+            valid = False
+            while not valid:
+                try:
+                    choice = input('> Enter item number: ')
+                    if choice == '': raise ValueError('> ❗ Choice may not be empty!\n')
+                    if not choice.isnumeric(): raise ValueError('> ❗ Choice must be a number!\n')
+                    if int(choice) < 1 or int(choice) > len(market.buy.items): raise ValueError('> ❗ Out of choices, please enter the correct number!\n')
+                    valid = True
+
+                except ValueError as e:
+                    print(str(e))
+
+            print()
+
+            valid = False
+            while not valid:
+                try:
+                    amount = input('> Enter the amount you want to buy: ')
+                    if amount == '': raise ValueError('> ❗ Choice may not be empty!\n')
+                    if not amount.isnumeric(): raise ValueError('> ❗ Invalid amount!\n')
+                        
+                    amount = int(amount)
+                    if amount < 1: raise ValueError('> ❗ You must buy at least 1 seed!\n')
+                    valid = True
+
+                except ValueError as e:
+                    print(str(e))
+
+            print()
+
+            
+            item_to_buy = market.buy.get_item(int(choice))
+
+            possible_to_buy = False if user.money - (item_to_buy['price'] * amount) < 0 else True
+
+            if not possible_to_buy:
+                print("Sorry, you don't have enough money to buy.")
+            else:
+                user.expense(item_to_buy['price'] * amount)
+                user.update_seed(f'{item_to_buy['icon']} {item_to_buy['name']}', amount)
+                print(f'{item_to_buy['icon']} {item_to_buy['name']} seed(s) has been purchased. Total purchase: {item_to_buy['price'] * amount}')
+            
             input('\n> Press any key to continue...')
             cls()
 
@@ -194,7 +251,7 @@ def market_menu():
             cls()
 
         elif choice == '3':
-            print('Thank you for visiting our market!')
+            print('\nThank you for visiting our market!')
 
             break
         
